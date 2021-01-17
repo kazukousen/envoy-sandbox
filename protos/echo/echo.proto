@@ -4,8 +4,14 @@ package echo;
 
 option go_package = ".;echo";
 
+import "google/api/annotations.proto";
+
 service Echo {
-  rpc Echo (EchoInput) returns (EchoReply);
+  rpc Echo (EchoInput) returns (EchoReply) {
+    option (google.api.http) = {
+      get: "/echo"
+    };
+  };
 }
 
 message EchoInput {
