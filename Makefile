@@ -15,3 +15,7 @@ build.docker:
 		-v $(shell pwd)/go.mod:/tmp/go/go.mod \
 		golang:1.15-alpine /bin/sh \
 		-c 'GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o ./${name}/app ./${name}/main.go'
+
+.PHONY: run
+run:
+	docker-compose -f ${name}/docker-compose.yaml up

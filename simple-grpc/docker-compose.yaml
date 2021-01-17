@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  echo:
+    entrypoint: /usr/local/bin/app
+    build:
+      context: ..
+      dockerfile: ./echo/Dockerfile
+    networks:
+      - envoymesh
+  proxy:
+    entrypoint: /usr/local/bin/envoy
+    image: envoyproxy/envoy-dev:latest
+    networks:
+      - envoymesh
+    ports:
+    - 18000:18000
+    - 15000:15000
+    working_dir: /tmp/envoy
+    volumes:
+    - ./envoy.yaml:/tmp/envoy/envoy.yaml
+    command:
+      - -c
+      - /tmp/envoy/envoy.yaml
+      - --concurrency
+      - '2'
+
+networks:
+  envoymesh: {}
