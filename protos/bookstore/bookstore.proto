@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package bookstore;
+
+option go_package = ".;bookstore";
+
+import "google/protobuf/empty.proto";
+import "google/api/annotations.proto";
+
+service Bookstore {
+  rpc ListShelves(google.protobuf.Empty) returns (ListShelvesResponse) {
+    option (google.api.http) = {
+      get: "/shelves"
+    };
+  }
+}
+
+message Shelf {
+  // A unique shelf id.
+  int64 id = 1;
+  // A theme of shelf (fiction, poetry, etc...).
+  string theme = 2;
+}
+
+message ListShelvesResponse {
+  // Shelves in the bookstore.
+  repeated Shelf shelves = 1;
+}
