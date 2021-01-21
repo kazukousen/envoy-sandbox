@@ -40,6 +40,7 @@ jobs:
   push_proto_descriptor:
     needs: [build]
     runs-on: ubuntu-latest
+    working-directory: /work
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -47,11 +48,15 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: proto-descriptor
-          path: protos/echo/echo.pb
+          path: /work/echo.pb
       - name: Setup GCP
         uses: google-github-actions/setup-gcloud@master
         with:
           project_id: ${{ secrets.GCP_PROJECT }}
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           export_default_credentials: true
-      # - name: Upload to GCS
+      - name: Upload to GCS
+        uses: google-github-actions/upload-cloud-storage@main
+        with:
+          path: /work/echo.pb
+          destination: ${{ secrets.GCP_BUCKET }}/protos/${{ github.sha }}/echo.pb
