@@ -58,4 +58,4 @@ jobs:
         uses: google-github-actions/upload-cloud-storage@main
         with:
           path: protos/echo/echo.pb
-          destination: ${{ secrets.GCP_BUCKET }}/protos/${{ github.sha }}/echo.pb
+          destination: ${{ secrets.GCS_BUCKET }}/protos/${{ github.sha }}/echo.pb
