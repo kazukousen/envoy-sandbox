@@ -13,7 +13,8 @@ jobs:
     steps:
       - name: Clone googleapis
         run: |
-          pushd "$GOOGLEAPIS_TMP_DIR" >& /dev/null
+          mkdir "${GOOGLEAPIS_TMP_DIR}"
+          pushd "${GOOGLEAPIS_TMP_DIR}" >& /dev/null
           git clone https://github.com/googleapis/googleapis .
           popd >& /dev/null
       - name: Checkout
