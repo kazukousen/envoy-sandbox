@@ -19,6 +19,10 @@ jobs:
           popd >& /dev/null
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Install Protoc
+        uses: arduino/setup-protoc@v1
+        with:
+          version: '3.x'
       - name: Generate proto descriptor
         run: |
           protoc \
