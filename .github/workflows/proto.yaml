@@ -40,7 +40,9 @@ jobs:
   push_proto_descriptor:
     needs: [build]
     runs-on: ubuntu-latest
-    working-directory: /work
+    defaults:
+      run:
+        working-directory: /work
     steps:
       - name: Checkout
         uses: actions/checkout@v2
