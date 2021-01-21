@@ -29,7 +29,8 @@ jobs:
             -I="${GOOGLEAPIS_TMP_DIR}" \
             -I=./protos/echo/ \
             --include_imports --include_source_info \
-            --descriptor_set_out=protos/echo/echo.pb
+            --descriptor_set_out=protos/echo/echo.pb \
+            ./protos/echo/echo.proto
       - name: Archive artifacts
         uses: actions/upload-artifact@v2
         with:
