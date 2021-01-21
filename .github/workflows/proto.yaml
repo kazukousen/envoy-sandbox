@@ -26,7 +26,7 @@ jobs:
             --include_imports --include_source_info \
             --descriptor_set_out=protos/echo/echo.pb
       - name: Archive artifacts
-        uses: action/upload-artifact@v2
+        uses: actions/upload-artifact@v2
         with:
           name: proto-descriptor
           path: protos/echo/echo.pb
