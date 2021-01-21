@@ -47,7 +47,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: proto-descriptor
-          path: ~/echo.pb
+          path: protos/echo/echo.pb
       - name: Setup GCP
         uses: google-github-actions/setup-gcloud@master
         with:
@@ -57,5 +57,5 @@ jobs:
       - name: Upload to GCS
         uses: google-github-actions/upload-cloud-storage@main
         with:
-          path: ~/echo.pb
+          path: protos/echo/echo.pb
           destination: ${{ secrets.GCP_BUCKET }}/protos/${{ github.sha }}/echo.pb
