@@ -1,0 +1,61 @@
+name: Generate and push proto descriptor
+on:
+  push:
+    paths:
+      - '.github/workflows/proto.yaml'
+      - 'protos/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      GOOGLEAPIS_TMP_DIR: /tmp/googleapis
+    steps:
+      - name: Clone googleapis
+        run: |
+          mkdir "${GOOGLEAPIS_TMP_DIR}"
+          pushd "${GOOGLEAPIS_TMP_DIR}" >& /dev/null
+          git clone https://github.com/googleapis/googleapis .
+          popd >& /dev/null
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Protoc
+        uses: arduino/setup-protoc@v1
+        with:
+          version: '3.x'
+      - name: Generate proto descriptor
+        run: |
+          protoc \
+            -I="${GOOGLEAPIS_TMP_DIR}" \
+            -I=./protos/echo/ \
+            --include_imports --include_source_info \
+            --descriptor_set_out=protos/echo/echo.pb \
+            ./protos/echo/echo.proto
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: proto-descriptor
+          path: protos/echo/echo.pb
+          if-no-files-found: error
+  push_proto_descriptor:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: proto-descriptor
+          path: protos/echo/echo.pb
+      - name: Setup GCP
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          project_id: ${{ secrets.GCP_PROJECT }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+      - name: Upload to GCS
+        uses: google-github-actions/upload-cloud-storage@main
+        with:
+          path: protos/echo/echo.pb
+          destination: ${{ secrets.GCS_BUCKET }}/protos/${{ github.sha }}/echo.pb
